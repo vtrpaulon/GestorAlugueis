@@ -1,0 +1,6 @@
+@GestorAlugueis_HostAddress = http://localhost:5241
+
+GET {{GestorAlugueis_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
