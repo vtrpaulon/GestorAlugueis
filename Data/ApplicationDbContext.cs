@@ -10,7 +10,13 @@ namespace GestorAlugueis.Data
         {
         }
 
-        // Adicione esta propriedade
         public DbSet<Imovel> Imoveis { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Imovel>()
+                .Property(i => i.ValorAluguel)
+                .HasPrecision(18, 2);
+        }
     }
 }
