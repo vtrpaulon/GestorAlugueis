@@ -1,6 +1,7 @@
 using GestorAlugueis.DTOs;
 using GestorAlugueis.Repositories;
 using GestorAlugueis.Entities;
+using System.Linq;
 
 
 namespace GestorAlugueis.Services
@@ -16,15 +17,15 @@ namespace GestorAlugueis.Services
 
         public IEnumerable<ImovelDto> ObterTodos()
         {
-        return _repository.ObterTodos()
-        .Select(i => new ImovelDto
-        {
-            Id = i.Id,
-            Endereco = i.Endereco,
-            ValorAluguel = i.ValorAluguel,
-            Disponivel = i.Disponivel
-        });
-}
+            return _repository.ObterTodos()
+            .Select(i => new ImovelDto
+            {
+                Id = i.Id,
+                Endereco = i.Endereco,
+                ValorAluguel = i.ValorAluguel,
+                Disponivel = i.Disponivel
+            });
+        }
 
         public ImovelDto? ObterPorId(int id)
         {
