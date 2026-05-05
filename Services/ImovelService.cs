@@ -1,6 +1,11 @@
-using GestorAlugueis.Data;
-using GestorAlugueis.Entities;
+using GestorAlugueis.DTOs;
 using GestorAlugueis.Repositories;
+using GestorAlugueis.Entities;
+using System;
+using System.Collections.Generic;
+using GestorAlugueis.Controllers;
+using GestorAlugueis.Services;
+
 
 namespace GestorAlugueis.Services
 {
@@ -13,18 +18,42 @@ namespace GestorAlugueis.Services
             _repository = repository;
         }
 
-        public void Criar(Imovel imovel)
-        {
-            if(imovel.ValorAluguel <= 0)
-            {
-                throw new ArgumentException("O valor do aluguel deve ser maior que zero.");
-            }
-            _repository.Adicionar(imovel);
-        }
-        public List<Imovel> ObterTodos()
+        public IEnumerable<Imovel> ObterTodos()
         {
             return _repository.ObterTodos();
         }
+
+        public Imovel ObterPorId(int id)
+        {
+            return _repository.ObterPorId(id);
+        }
+
+        public int Criar(ImovelCreateDto dto)
+        {
+            var imovel = new Imovel(dto.Endereco, dto.ValorAluguel, dto.Disponivel);
+            _repository.Criar(imovel);
+            return imovel.Id;
+        }
+
+        public void Atualizar(int id, ImovelCreateDto dto)
+        {
+            var imovelExistente = _repository.ObterPorId(id);
+            if (imovelExistente == null)
+            {
+                throw new Exception("Imóvel não encontrado");
+            }
+
+            imovelExistente.Endereco = dto.Endereco;
+            imovelExistente.ValorAluguel = dto.ValorAluguel;
+            imovelExistente.Disponivel = dto.Disponivel;
+
+            _repository.Atualizar(imovelExistente);
+        }
+
+        public void Deletar(int id)
+        {
+            _repository.Deletar(id);
+        }      
 
 
     }
