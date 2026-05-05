@@ -1,10 +1,6 @@
 using GestorAlugueis.DTOs;
 using GestorAlugueis.Repositories;
 using GestorAlugueis.Entities;
-using System;
-using System.Collections.Generic;
-using GestorAlugueis.Controllers;
-using GestorAlugueis.Services;
 
 
 namespace GestorAlugueis.Services
@@ -18,29 +14,50 @@ namespace GestorAlugueis.Services
             _repository = repository;
         }
 
-        public IEnumerable<Imovel> ObterTodos()
+        public IEnumerable<ImovelDto> ObterTodos()
         {
-            return _repository.ObterTodos();
+        return _repository.ObterTodos()
+        .Select(i => new ImovelDto
+        {
+            Id = i.Id,
+            Endereco = i.Endereco,
+            ValorAluguel = i.ValorAluguel,
+            Disponivel = i.Disponivel
+        });
+}
+
+        public ImovelDto? ObterPorId(int id)
+        {
+
+            var i = _repository.ObterPorId(id);
+            if (i == null)
+            return null;
+
+            return new ImovelDto
+            {
+                Id = i.Id,
+                Endereco = i.Endereco,
+                ValorAluguel = i.ValorAluguel,
+                Disponivel = i.Disponivel
+            };
         }
 
-        public Imovel ObterPorId(int id)
+        public int Criar(ImovelDto dto)
         {
-            return _repository.ObterPorId(id);
-        }
+            if (dto.ValorAluguel <= 0)
+            throw new ArgumentException("Valor do aluguel deve ser maior que zero");
 
-        public int Criar(ImovelCreateDto dto)
-        {
             var imovel = new Imovel(dto.Endereco, dto.ValorAluguel, dto.Disponivel);
             _repository.Criar(imovel);
             return imovel.Id;
         }
 
-        public void Atualizar(int id, ImovelCreateDto dto)
+        public void Atualizar(int id, ImovelDto dto)
         {
             var imovelExistente = _repository.ObterPorId(id);
             if (imovelExistente == null)
             {
-                throw new Exception("Imóvel não encontrado");
+                throw new KeyNotFoundException("Imóvel não encontrado");
             }
 
             imovelExistente.Endereco = dto.Endereco;
@@ -52,6 +69,9 @@ namespace GestorAlugueis.Services
 
         public void Deletar(int id)
         {
+            var imovel = _repository.ObterPorId(id);
+            if (imovel == null)
+                throw new KeyNotFoundException("Imóvel não encontrado");
             _repository.Deletar(id);
         }      
 

@@ -20,7 +20,7 @@ namespace GestorAlugueis.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Imovel>> Get()
+        ActionResult<IEnumerable<ImovelDto>> Get()
         {
             var imoveis = _service.ObterTodos();
             return Ok(imoveis);
@@ -38,14 +38,14 @@ namespace GestorAlugueis.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] ImovelCreateDto dto)
+        public ActionResult Post([FromBody] ImovelDto dto)
         {
             var id = _service.Criar(dto);
             return CreatedAtAction(nameof(Get), new { id }, null);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] ImovelCreateDto dto)
+        public ActionResult Put(int id, [FromBody] ImovelDto dto)
         {
             try
             {
