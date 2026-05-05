@@ -2,6 +2,9 @@ using GestorAlugueis.Data;
 using Microsoft.EntityFrameworkCore;
 using GestorAlugueis.Repositories;
 using GestorAlugueis.Services;
+using GestorAlugueis.DTOs;
+using GestorAlugueis.Controllers;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
